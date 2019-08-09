@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // 当函数的参数具有可选和必选两种时，如果按照顺序书写，会出现问题
+        // - 可以将参数设置为一个对象，将原始参数设置为这个对象的属性
+        function get (options) {
+            // 1 创建一个xhr对象
+            var xhr = new XMLHttpRequest();
+
+            // 2 调用open方法（建立与服务端的连接）
+            //  - 检测data是否具有数据，如果没有，直接设置url，如果有，进行拼接
+            if (options.data) {
+                // 说明具有参数，进行拼接
+                options.url = options.url + '?' + options.data;
+            }
+            xhr.open('get', options.url);
+
+            // 3 调用send方法（将请求发送出去）
+            xhr.send();
+
+            // 4 接收响应内容
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    // 5 对响应内容的实际使用方式不确定
+                    if (typeof options.success === 'function') {
+                        options.success(xhr.responseText);
+                    }
+                }
+            };
+        }
+
+
+        // https://autumnfish.cn/api/joke/list?num=3
+        /* get('https://autumnfish.cn/api/joke/list', function (res) {
+            console.log(res);
+        }); */
+
+
+        // 使用示例：
+        get({
+            url : 'https://autumnfish.cn/api/joke',
+            // 如果设置了参数，使用'https://autumnfish.cn/api/joke/list'接口地址
+            // data : 'num=3', 
+            /* success : function (res) {
+                console.log(res);
+                // console.log(JSON.parse(res));
+            } */
+        });
+        
+    
+    </script>
+</body>
+</html>
